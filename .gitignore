@@ -1,5 +1,10 @@
 venv/
 __pycache__/
-*.__pycache__
+*.pyc
 .env
 .vscode/
+media/
+testcase_files/
+*.pdf
+*.docx
+*.xlsx
