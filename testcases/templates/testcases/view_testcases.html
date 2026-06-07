@@ -1,0 +1,30 @@
+<h2>View Test Cases</h2>
+
+<table border="1">
+    <tr>
+        <th>Title</th>
+        <th>Project</th>
+        <th>Description</th>
+        <th>Status</th>
+        <th>Uploaded By</th>
+        <th>Uploaded At</th>
+        <th>File</th>
+    </tr>
+
+    {% for testcase in testcases %}
+    <tr>
+        <td>{{ testcase.title }}</td>
+        <td>{{ testcase.project_name }}</td>
+        <td>{{ testcase.description }}</td>
+        <td>{{ testcase.status }}</td>
+        <td>{{ testcase.uploaded_by.username }}</td>
+        <td>{{ testcase.uploaded_at }}</td>
+        <td>
+            <a href="{{ testcase.uploaded_file.url }}">Open File</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+<br>
+<a href="{% url 'tester_dashboard' %}">Back to Dashboard</a>

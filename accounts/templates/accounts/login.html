@@ -2,8 +2,8 @@
 
 <form method="POST">
     {% csrf_token %}
-    <label>Username:</label>
-    <input type="text" name="username">
+    <label>Username or Email:</label>
+    <input type="text" name="login_input">
 
     <br><br>
     <label>Password:</label>
@@ -11,7 +11,16 @@
 
     <br><br>
 
+    <input type="checkbox" name="remember_me">
+    <label>Remember Me </label>
+
     <button type="submit">Login</button>
+    <br>
+    <a href="/forgot-password/">Forgot Password?</a>
+
+    <br>
+    <a href="/forgot-username/">Forgot Username?</a>
+
 
 </form>
 

@@ -1,0 +1,17 @@
+<h2>My Sessions</h2>
+
+<table border="1">
+    <tr>
+        <th>Session ID</th>
+        <th>Created At</th>
+        <th>Expires At</th>
+    </tr>
+
+    {%for session in sessions %}
+    <tr>
+        <td>{{ session.session_id }}</td>
+        <td>{{ session.created_at }}</td>
+        <td>{{ session.expires_at }}</td>
+    </tr>
+    {% endfor %}
+</table>

@@ -1,0 +1,8 @@
+<h1>Upload Test Case</h1>
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{form.as_p}}
+    <button type="submit">Upload</button>
+</form>
+<br>
+<a href="{% url 'tester_dashboard' %}">Back to Tester Dashboard</a>

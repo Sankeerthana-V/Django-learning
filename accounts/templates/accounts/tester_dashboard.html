@@ -1,0 +1,50 @@
+<h1>Tester Dashboard</h1>
+<p>Login successful.Tester can upload test cases and scripts.</p>
+<a href="{% url 'upload_testcase' %}">Upload Test Case</a>
+
+<br>
+<a href="/testcases/list/">View Test Cases</a>
+<script>
+    const sessionId="{{session_id}}";
+    function getCookie(name){
+        let cookieValue=null;
+        if(document.cookie && document.cookie !==""){
+            const cookies = document.cookie.split(";");
+            for(let i=0; i< cookies.length; i++){
+                const cookie = cookies[i].trim();
+                if (cookie.startsWith(name+"=")){
+                    cookieValue=cookie.substring(name.length+1);
+                    break;
+                }
+            }
+
+        }
+        return cookieValue
+    }
+    const csrftoken=getCookie("csrftoken");
+    
+    function refreshToken(){
+        fetch("/refresh-session-token/",{
+            method: "POST",
+            headers: {
+                "Content-Type":"application/json"
+            },
+            body: JSON.stringify({
+                session_id: sessionId
+            })
+        })
+        .then(response=> response.json())
+        .then(data => {console.log("Token refreshed:",data)})
+        .catch(error => {console.error("Token refresh error:",error);});
+    }
+    setInterval(refreshToken,60000);
+</script>
+
+<br><br>
+<a href="/logout/">Logout</a>
+
+<br>
+<a href="/change-password/">Change Password</a>
+
+<br>
+<a href="/my-sessions/">My Sessions</a>
