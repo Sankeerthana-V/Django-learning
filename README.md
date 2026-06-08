@@ -289,3 +289,244 @@ Purpose:
 - Improve security
 - Prevent weak passwords
 - Follow industry standards
+
+---
+
+## Change Password Feature Objective
+
+Allow authenticated users to securely change their password without administrator intervention.
+
+- Improve account security
+- Allow users to update compromised passwords
+- Enable self-service password management
+
+Workflow:
+
+User Login-->Open Change Password Page-->Enter Current Password-->Enter New Password-->Password Validation-->Password Updated Successfully
+
+Result:Users can securely update their passwords while remaining authenticated.
+
+Files Modified:
+- accounts/views.py
+- accounts/urls.py
+- accounts/templates/accounts/change_password.html
+
+---
+
+## My Sessions Feature Objective
+
+Allow users to view all active login sessions associated with their account.
+
+Purpose:
+
+- Improve account visibility
+- Track active logins
+- Support security auditing
+
+Information Displayed:
+
+- Session ID
+- Login Time
+- Access Token Expiration
+- Refresh Token Expiration
+
+Workflow:
+
+User Login-->Open My Sessions Page-->Retrieve Session Records-->Display Active Sessions
+
+Result:
+Users can monitor active sessions associated with their account.
+
+Files Modified:
+
+- accounts/views.py
+- accounts/templates/accounts/my_sessions.html
+
+---
+
+## Automatic UserProfile Creation Objective
+
+Automatically create a UserProfile whenever a new user account is created.
+
+Purpose:
+- Eliminate manual profile creation
+- Ensure every user has an assigned role
+- Support role-based access control
+
+Implementation:
+Django signals are used to automatically create a UserProfile after user creation.
+
+Workflow:
+
+New User Created-->Signal Triggered-->UserProfile Created-->Default Role Assigned
+
+Result:
+Every user automatically receives a UserProfile record.
+
+Files Modified:
+- accounts/models.py
+- accounts/signals.py
+- accounts/apps.py
+
+---
+
+## Forgot Username Feature Objective
+Allow users to recover their username using their registered email address.
+
+Purpose:
+
+- Help users regain access
+- Reduce administrative support requests
+
+Workflow:
+
+User Opens Forgot Username Page-->Enter Registered Email-->Verify Email Exists-->Display Username
+
+Result:
+Users can recover forgotten usernames without contacting an administrator.
+
+Files Modified:
+- accounts/views.py
+- accounts/urls.py
+- accounts/templates/accounts/forgot_username.html
+
+---
+
+## Test Case Management Objective
+
+Provide a centralized location for testers to upload, store, and manage QA test cases.
+
+Features Implemented:
+
+- Upload new test cases
+- Store uploaded files
+- Track test case details
+- View uploaded test cases
+- Associate test cases with users
+
+Model Created: TestCase
+
+Fields Stored:
+
+- Title
+- Project Name
+- Description
+- Status
+- Uploaded File
+- Uploaded By
+- Uploaded At
+
+Result:
+Test cases are stored in PostgreSQL and linked to the user who uploaded them.
+
+Files Modified:
+- testcases/models.py
+- testcases/admin.py
+
+---
+
+## Test Case Upload Objective
+
+Allow testers to upload QA test cases and supporting documents.
+
+Upload Form Fields:
+
+- Title
+- Project Name
+- Description
+- Status
+- Uploaded File
+
+Workflow:
+
+Tester Login-->Open Upload Test Case Page-->Enter Test Case Details-->Choose File-->Submit Form-->Save Record In Database-->Store File In Media Folder
+
+Result:
+Test cases and files are successfully stored in the system.
+
+Files Modified:
+
+- testcases/forms.py
+- testcases/views.py
+- testcases/templates/testcases/upload_testcase.html
+
+---
+
+## File Upload Management Objective
+
+Allow users to upload and access QA-related documents.
+
+Configuration:
+Media files are stored separately from application code.
+
+Features:
+- Upload PDF files
+- Upload DOCX files
+- Store uploaded documents
+- Open uploaded files from portal
+
+Result:
+Uploaded files are accessible directly from the application.
+
+Files Modified:
+- config/settings.py
+- config/urls.py
+
+---
+
+## View Test Cases Objective
+Display all uploaded test cases in a tabular format.
+
+Information Displayed:
+
+- Title
+- Project Name
+- Description
+- Status
+- Uploaded By
+- Uploaded At
+- Uploaded File
+
+Workflow:
+
+User Opens View Test Case-->Fetch Records From Database-->Display Test Cases In Table
+
+Result:
+Users can view all available test cases from a centralized page.
+
+Files Modified:
+- testcases/views.py
+- testcases/templates/testcases/view_testcases.html
+
+---
+
+## Test Case Status Tracking Objective
+Track the execution status of every test case.
+
+Status Values:
+
+- Pending
+- In Progress
+- Passed
+- Failed
+
+Purpose:
+- Monitor testing progress
+- Identify completed testing
+- Identify failed testing
+- Improve reporting visibility
+
+Workflow
+
+Tester Uploads Test Case-->Status = Pending-->Tester Executes Test Case-->Tester Updates Status-->Passed / Failed / In Progress
+
+Result:
+The current status of every test case is visible from the portal.
+
+Files Modified:
+- testcases/models.py
+- testcases/views.py
+- testcases/templates/testcases/view_testcases.html
+
+---
+

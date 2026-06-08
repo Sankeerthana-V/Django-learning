@@ -16,7 +16,21 @@
         <td>{{ testcase.title }}</td>
         <td>{{ testcase.project_name }}</td>
         <td>{{ testcase.description }}</td>
-        <td>{{ testcase.status }}</td>
+        <td>
+            <form method="POST" action="{% url 'update_testcase_status' testcase.id %}">
+                {% csrf_token %}
+
+                <select name="status">
+                    <option value="Pending" {% if testcase.status == "Pending" %}selected{% endif %}>Pending</option>
+                    <option value="In Progress" {% if testcase.status == "In Progress" %}selected{% endif %}>In Progress</option>
+                    <option value="Passed" {% if testcase.status == "Passed" %}selected{% endif %}>Passed</option>
+                    <option value="Failed" {% if testcase.status == "Failed" %}selected{% endif %}>Failed</option>
+
+                </select>
+                <button type="submit">Update</button>
+
+            </form>
+        </td>
         <td>{{ testcase.uploaded_by.username }}</td>
         <td>{{ testcase.uploaded_at }}</td>
         <td>

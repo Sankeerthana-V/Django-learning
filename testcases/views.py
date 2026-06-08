@@ -1,7 +1,8 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,get_object_or_404
 from .forms import TestCaseForm
 from django.contrib.auth.decorators import login_required
 from .models import TestCase
+from django.http import HttpResponse
 
 @login_required
 def upload_testcase(request):
@@ -24,6 +25,17 @@ def view_testcases(request):
     testcases=TestCase.objects.all().order_by("-uploaded_at")
     return render(request,"testcases/view_testcases.html",{"testcases":testcases})
 
+@login_required
+def update_testcase_status(request,testcase_id):
+    if request.user.userprofile.role != "manager":
+        return HttpResponse("Access Denied")
+    testcase=get_object_or_404(TestCase,id=testcase_id)
+    if request.method=="POST":
+        new_status=request.POST.get("status")
+        testcase.status=new_status
+        testcase.save()
+
+    return redirect("view_testcases")
 
 
 
