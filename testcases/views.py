@@ -3,6 +3,7 @@ from .forms import TestCaseForm
 from django.contrib.auth.decorators import login_required
 from .models import TestCase
 from django.http import HttpResponse
+from accounts.models import ActivityLog
 
 @login_required
 def upload_testcase(request):
@@ -34,6 +35,11 @@ def update_testcase_status(request,testcase_id):
         new_status=request.POST.get("status")
         testcase.status=new_status
         testcase.save()
+
+    ActivityLog.objects.create(
+        user=request.user,
+        action=f"Updated {testcase.title} to {new_status}"
+    )
 
     return redirect("view_testcases")
 

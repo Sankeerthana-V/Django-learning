@@ -530,3 +530,30 @@ Files Modified:
 
 ---
 
+## Activity Logging
+
+Track user actions performed within the platform.
+
+Activities Logged:
+
+- Login
+- Logout
+- Password Change
+- Test Case Upload
+- Status Updates
+
+Purpose:
+
+- Security auditing
+- User activity tracking
+- System monitoring
+
+Result:
+
+All activity records are stored in PostgreSQL and available through Django Admin.
+
+---
+
+
+
+

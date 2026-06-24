@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.utils.timezone import now
 from datetime import timedelta
-from .models import UserSessionToken
+from .models import UserSessionToken,ActivityLog
 from rest_framework.decorators import api_view,permission_classes,authentication_classes
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
@@ -34,6 +34,11 @@ def login_view(request):
         print("AUTH USER:", user)
         if user is not None:
             login(request,user)
+
+            ActivityLog.objects.create(
+                 user=user,
+                 action="Logged In"
+            )
             if not remenber_me:
                  request.session.set_expiry(0)
 
