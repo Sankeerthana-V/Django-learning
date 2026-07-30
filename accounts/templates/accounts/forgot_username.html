@@ -12,13 +12,10 @@
     <input type="email" name="email" required>
     <button type="submit">Find Username</button>
 </form>
-{% if username %}
-    <h3>Your Username: {{ username }}</h3>
+{% if message %}
+    <p>{{ message }}</p>
 {% endif %}
 
-{% if error %}
-    <p style="color:red">{{ error }}</p>
-{% endif %}
 
 </body>
 </html>

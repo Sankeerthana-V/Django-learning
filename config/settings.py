@@ -9,18 +9,20 @@ https://docs.djangoproject.com/en/6.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
-
+import os
 from pathlib import Path
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(BASE_DIR/ ".env",override=True)
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-hlg-=9h%^jf#7s4gvuv^o6j=mf=o$tlzmt)ewvas%*tkb_2-oo'
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -78,12 +80,12 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'qa_automation_db',
-        'USER': 'postgres',
-        'PASSWORD': 'dolly@25',
-        'HOST': 'localhost',
-        'POST':'5432'
+        'ENGINE':'django.db.backends.postgresql',
+        'NAME':os.environ['DB_NAME'],
+        'USER':os.environ['DB_USER'],
+        'PASSWORD':os.environ['DB_PASSWORD'],
+        'HOST':os.getenv('DB_HOST',"localhost"),
+        'PORT':os.getenv("DB_PORT",'5432'),
     }
 }
 

@@ -12,16 +12,14 @@ from rest_framework.decorators import api_view,permission_classes,authentication
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-import re
+from django.core.mail import send_mail
 
 def login_view(request):
     if request.method=="POST":
         login_input=request.POST.get("login_input")
         password=request.POST.get("password")
-        remenber_me=request.POST.get("remember_me")
+        remember_me=request.POST.get("remember_me")
 
-        print("LOGIN INPUT:",login_input)
-        print("PASSWORD:",password)
 
         
         try:
@@ -29,9 +27,8 @@ def login_view(request):
                 username=user_obj.username
         except User.DoesNotExist:
                 username=login_input
-        print("USERNAME USED:",username)
+        
         user=authenticate(request,username=username,password=password)
-        print("AUTH USER:", user)
         if user is not None:
             login(request,user)
 
@@ -39,7 +36,7 @@ def login_view(request):
                  user=user,
                  action="Logged In"
             )
-            if not remenber_me:
+            if not remember_me:
                  request.session.set_expiry(0)
 
             refresh= RefreshToken.for_user(user)
@@ -127,88 +124,35 @@ def refresh_session_token(request):
     
 def logout_view(request):
      logout(request)
-     return redirect("login")
+     return redirect("login")  
 
-def forgot_password_view(request):
-     if request.method=="POST":
-          email=request.POST.get("email")
-
-          user=User.objects.filter(email=email).first()
-
-          if user:
-               request.session["reset_user_id"]=user.id
-               return redirect("reset_password")
-          else:
-               return render(request, "accounts/forgot_password.html",{"error": "Email not found"})
-    
-     return render(request,"accounts/forgot_password.html") 
-
-def is_valid_password(password):
-     if len(password)<8:
-          return False
-     if not re.search(r"[A-Z]",password):
-          return False
-     if not re.search(r"[a-z]",password):
-          return False
-     if not re.search(r"[0-9]",password):
-          return False
-     if not re.search(r"[!@$%*?&]",password):
-          return False
-     return True
-     
-    
-
-def reset_password_view(request):
-     if request.method=="POST":
-          user_id=request.session.get("reset_user_id")
-          new_password=request.POST.get("new_password")
-          confirm_password=request.POST.get("confirm_password")
-          if not is_valid_password(new_password):
-            return render(request, "accounts/reset_password.html", {
-        "error": "Password must be at least 8 characters and include 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special symbol."
-    })
-
-          if new_password!= confirm_password:
-               return render(request, "accounts/reset_password.html",{"error":"Passwords do not match"})
-          user=User.objects.get(id=user_id)
-          user.set_password(new_password)
-          user.save()
-
-          del request.session["reset_user_id"]
-          return redirect("login")
-
-     return render(request,"accounts/reset_password.html")
 
 def forgot_username_view(request):
-     if request.method=="POST":
-          email=request.POST.get("email")
-          user=User.objects.filter(email=email).first()
-          if user:
-               return render(request,"accounts/forgot_username.html", {"username": user.username})
-          else:
-               return render(request,"accounts/forgot_username.html", {"error": "Email not found"})
-     return render(request,"accounts/forgot_username.html")
+    message = None
 
+    if request.method == "POST":
+        email = request.POST.get("email")
+        user = User.objects.filter(email=email).first()
 
-@login_required
-def change_password_view(request):
-     if request.method=="POST":
-          old_password=request.POST.get("old_password")
-          new_password=request.POST.get("new_password")
-          confirm_password=request.POST.get("confirm_password")
+        if user:
+            send_mail(
+                subject="Your QA Automation Platform username",
+                message=f"Your username is: {user.username}",
+                from_email=None,
+                recipient_list=[user.email],
+            )
 
-          if not request.user.check_password(old_password):
-               return render(request,"accounts/change_password.html",{"error":"Old password is incorrect"})
-          if new_password != confirm_password:
-               return render(request,"accounts/change_password.html",{"error":"Passwords do not match"})
-          if not is_valid_password(new_password):
-               return render(request,"accounts/change_password.html",{"error":"Password must be at least 8 "
-               "characters and include 1 uppercase letter,1 lowercase letter,1 number, and 1 special symbol."})
-          request.user.set_password(new_password)
-          request.user.save()
+        message = (
+            "If an account with this email exists, "
+            "the username has been sent."
+        )
 
-          return render(request,"accounts/change_password.html",{"success":"Password changed successfully"})
-     return render(request,"accounts/change_password.html")
+    return render(
+        request,
+        "accounts/forgot_username.html",
+        {"message": message},
+    )
+
 
 @login_required
 def my_sessions_view(request):
