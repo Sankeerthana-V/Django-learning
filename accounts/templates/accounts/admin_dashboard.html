@@ -23,8 +23,10 @@
     function refreshToken(){
         fetch("/refresh-session-token/",{
             method: "POST",
+            credentials:"same-origin",
             headers: {
-                "Content-Type":"application/json"
+                "Content-Type":"application/json",
+                "x-CSRFToken":csrftoken
             },
             body: JSON.stringify({
                 session_id: sessionId
